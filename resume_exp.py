@@ -10,11 +10,13 @@ parser.add_argument("--lambda1", default=1., type=float)
 parser.add_argument("--lambda2", default=1., type=float)
 parser.add_argument("--lambda3", default=1., type=float)
 parser.add_argument("--lambda4", default=1., type=float)
+parser.add_argument("--id", default=1., type=float)
 args = parser.parse_args()
 
 run = neptune.init(
     project="tutorial-cifar10/CIFAR10",
     api_token=os.environ.get('NEPTUNE_API_TOKEN'),
+    run=args.id,
 )  # your credentials
 
 # save arguments
@@ -26,8 +28,5 @@ for epoch in range(10):
     run["train/loss"].log(0.9 ** epoch)
 
 run["eval/test_acc"].log(torch.rand((1,)))
-
-## We recommend you to save checkpoints and args to your local directory with a name containing the 'id' of neptune
-# id = run.fetch()['sys']['id']
 
 run.stop()
